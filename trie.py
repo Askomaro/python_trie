@@ -3,7 +3,7 @@ from collections import defaultdict
 
 class Node(object):
     def __init__(self):
-        self.ref_nodes = defaultdict(Node)
+        self.children = defaultdict(Node)
         self.is_full_word = False
 
 
@@ -20,7 +20,7 @@ class Trie(object):
         current_node = self.root
 
         for char in word:
-            current_node = current_node.ref_nodes[char]
+            current_node = current_node.children[char]
 
         current_node.is_full_word = True
 
@@ -41,14 +41,29 @@ class Trie(object):
 
         return self._get_all_words(self.root, [], '')
 
+    def find(self, word):
+        """
+        Returns if the word is in the trie.
+        :type word: str
+        :rtype: bool
+        """
+        curr = self.root
+        for char in word:
+            if char not in curr.children:
+                return False
+            curr = curr.children[char]
+        return curr.is_full_word
+
+    def get_max_level(self, counter):
+        curr = self.root
+
     def _get_all_words(self, node, words, word):
         if node.is_full_word:
             words.append(word)
-            # word = ''
 
-        for key in node.ref_nodes:
+        for key in node.children:
             word += key
-            print(key)
-            self._get_all_words(node.ref_nodes[key], words, word)
+            self._get_all_words(node.children[key], words, word)
+            word = word[:-1]
 
         return words

@@ -8,3 +8,7 @@ if __name__ == '__main__':
     trie.insert_list(words)
 
     print(trie.walk_trie())
+    print(trie.find('book'))
+    print(trie.find('booklet'))
+    print(trie.find('boo'))
+    print(trie.find('bor'))
