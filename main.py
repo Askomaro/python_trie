@@ -12,3 +12,5 @@ if __name__ == '__main__':
     print(trie.find('booklet'))
     print(trie.find('boo'))
     print(trie.find('bor'))
+
+    print(trie.get_max_level())
