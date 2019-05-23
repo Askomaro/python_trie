@@ -2,10 +2,10 @@ from collections import defaultdict
 
 
 class Node(object):
-    def __init__(self):
-        self.children = defaultdict(Node)
-        self.label = ''
-        self.is_full_word = False
+    def __init__(self, is_end=False):
+        self.children = {}
+        self.label = {}
+        self.is_full_word = is_end
 
 
 class Trie(object):
@@ -19,21 +19,49 @@ class Trie(object):
         :rtype: void
         """
         current_node = self.root
-
-        # for char in word:
-        #     current_node = current_node.children[char]
         i = 0
-        while i < len(word):
-            if word[i] in current_node.children:
-                current_node = current_node.children[word[i]]
+
+        while i < len(word) and word[i] in current_node.label:
+            j = 0
+            index = word[i]
+            label = current_node.label[index]
+
+            while j < len(label) and i < len(word) and label[j] == word[i]:
                 i += 1
-                if word[i] == current_node.label[i]:
-                    i += 1
+                j += 1
+
+            if j == len(label):
+                current_node = current_node.children[index]
+            else:
+                if i == len(word):
+                    ex_child = current_node.children[index]
+                    new_child = Node(True)
+                    remaining_label = label[j:]
+
+                    current_node.label[index] = label[:j]
+                    current_node.children[index] = new_child
+                    new_child.children[remaining_label[0]] = ex_child
+                    new_child.label[remaining_label[0]] = remaining_label
+                else:
+                    remaining_label = label[j:]
+                    remaining_word = word[i:]
+
+                    new_child = Node(True)
+                    ex_child = current_node.children[index]
+
+                    current_node.label[index] = label[:j]
+                    current_node.children[index] = new_child
+
+                    new_child.children[remaining_label[0]] = ex_child
+                    new_child.label[remaining_label[0]] = remaining_label
+                    new_child.label[remaining_word[0]] = remaining_word
+                    new_child.children[remaining_word[0]] = Node(True)
+
+                return
 
         if i < len(word):
-            current_node = current_node.children[word[i]]
-            current_node.is_full_word = True
-            current_node.label = word
+            current_node.label[word[i]] = word[i:]
+            current_node.children[word[i]] = Node(True)
         else:
             current_node.is_full_word = True
 
@@ -68,9 +96,8 @@ class Trie(object):
 
     def get_max_level(self):
         """
-        Returns if the word is in the trie.
-        :type word: str
-        :rtype: bool
+        Returns max level number.
+        :rtype: int
         """
         max_level, _ = self._get_max_level(self.root, 0, 0)
         return max_level

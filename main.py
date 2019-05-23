@@ -4,6 +4,7 @@ if __name__ == '__main__':
     words = ["book", "bookcase", "booking", "booklet", "bookshelf", "boost",
              "boot", "booth", "border", "bore", "boring", "born", "borrow"]
 
+    new_words = ["there", "this"]
     trie = Trie()
     trie.insert_list(words)
 
