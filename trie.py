@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-
 class Node(object):
     def __init__(self, is_end=False):
         self.children = {}
