@@ -46,7 +46,7 @@ class Trie(object):
                     remaining_label = label[j:]
                     remaining_word = word[i:]
 
-                    new_child = Node(True)
+                    new_child = Node()
                     ex_child = current_node.children[index]
 
                     current_node.label[index] = label[:j]
@@ -79,7 +79,7 @@ class Trie(object):
         Finds all words from a trie
         :rtype: list of str
         """
-        return self._get_all_words(self.root, [], '')
+        return self._get_all_words(self.root, [], "")
 
     def find(self, word):
         """
@@ -87,12 +87,26 @@ class Trie(object):
         :type word: str
         :rtype: bool
         """
-        curr = self.root
-        for char in word:
-            if char not in curr.children:
+        i = 0
+        current_node = self.root
+
+        while i < len(word) and word[i] in current_node.label:
+            j = 0
+            index = word[i]
+            label = current_node.label[index]
+
+            while j < len(label) and i < len(word):
+                if word[i] != label[j]:
+                    return False
+                i += 1
+                j += 1
+
+            if j == len(label) and len(word) >= i:
+                current_node = current_node.children[index]
+            else:
                 return False
-            curr = curr.children[char]
-        return curr.is_full_word
+
+        return i == len(word) and current_node.is_full_word
 
     def get_max_level(self):
         """
@@ -117,9 +131,10 @@ class Trie(object):
         if node.is_full_word:
             words.append(word)
 
-        for key in node.children:
-            word += key
+        for key in node.label:
+            part_word = node.label[key]
+            word += part_word
             self._get_all_words(node.children[key], words, word)
-            word = word[:-1]
+            word = word.replace(part_word, "")
 
         return words
