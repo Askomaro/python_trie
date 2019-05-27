@@ -1,7 +1,7 @@
 # Realization of compressed prefix tree (compact trie/ trie tree) using Python
 Structure:
 
-trie.py - trie data structure, with realization of a trie node along with trie functionality as:
+trie.py - trie data structure, with realization of a trie node along with trie functionality itself as:
 - get_max_level - the longest way from start to end node
 - walk_tree - go through tree and return all the words or yield each of them
 - find - return True if given word exists in your tree
